@@ -9,12 +9,7 @@ body
 	line-height: 1.6
 	font-family: "OpenSansRegular", sans-serif
 	overflow-x: hidden
-	color: red
-
-.test
-	width: 40px
-	height: 40px
-	background-color: red
+	color: #222
 
 h1,h2,h3,h4,h5,h6
 	font-family: "OpenSansLight", sans-serif
@@ -48,6 +43,31 @@ h4
 
 .logo
 	display: block
-	width: 98px
+	width: 100px
 	img
 		width: 100%
+
+nav
+	ul
+		list-style-type: none
+		padding: 0
+		margin: 0
+	li
+		display: inline-block
+
+.main-mnu
+	text-align: center
+	font-size: em(16px)
+	>	ul
+		>	li
+			>	a
+				display: block
+				padding: 10px 18px
+				color: #7e91a4
+				@extend .mt
+				&:hover
+					color: #414e5b
+			&.active
+				a
+					color: #414e5b
+					text-decoration: underline
