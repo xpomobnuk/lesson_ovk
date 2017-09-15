@@ -3,7 +3,7 @@
 @import "_vars.sass"
 
 body
-	font-size: 14px
+	font-size: 16px
 	min-width: 320px
 	position: relative
 	line-height: 1.6
@@ -16,18 +16,23 @@ h1,h2,h3,h4,h5,h6
 	font-weight: normal
 
 h1
-	font-size: em(43)
+	font-size: em(41)
+	line-height: 1.2
+
+.ishome
+	h1
+		margin-top: 0
 
 h2
-	font-size: em(34)
+	font-size: em(32)
 
 h3,h4
 	font-family: "OpenSansSemiBold", sans-serif
 	text-transform: uppercase
-	font-size: em(17px)
+	font-size: em(15px)
 
 h4
-	font-size: em(15px)
+	font-size: em(13px)
 
 .hidden
 	display: none
@@ -47,7 +52,8 @@ h4
 	img
 		width: 100%
 
-nav
+nav,
+.header-content
 	ul
 		list-style-type: none
 		padding: 0
@@ -57,14 +63,14 @@ nav
 
 .main-mnu
 	text-align: center
-	font-size: em(16px)
+	font-size: em(13px)
 	>	ul
 		>	li
 			>	a
 				display: block
 				padding: 10px 18px
 				color: #7e91a4
-				@extend .mt
+				+mt(.5s)
 				&:hover
 					color: #414e5b
 			&.active
@@ -74,9 +80,36 @@ nav
 
 .phone
 	text-align: right
+	line-height: 1.4
 	.phone-wrap
 		color: #414e5b
 		font-family:  "Exo2Bold" , sans-serif
-		font-size: em(22px)
+		font-size: em(20px)
+		line-height: em(14px)
 		.fa
-			font-size: em(22px)
+			font-size: em(18px)
+			position: relative
+			top: 2px
+			margin-right: 5px
+	.callback
+			color: #7e91a4
+			display: inline-block
+			font-size: em(13px)
+			line-height: em(22px)
+			border-bottom: 1px dashed #7e91a4
+			+mt(.3s)
+			&:hover
+				text-decoration: none
+				border-color: transparent
+
+.header-content
+	padding: 9% 0
+	ul
+		margin-top: 40px
+		li
+			display: block
+			color: #414e5b
+			text-transform: uppercase
+			font-family: "OpenSansSemiBold", sans-serif
+			font-size: em(17px)
+			line-height: 1.8
