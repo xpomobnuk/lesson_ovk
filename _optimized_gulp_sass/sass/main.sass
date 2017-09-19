@@ -36,6 +36,8 @@ body textarea:required:valid
 	display: block
 	&:hover
 		text-decoration: none
+		&::before
+			opacity: .8
 	&::before
 		content: ''
 		width: 100%
@@ -45,6 +47,7 @@ body textarea:required:valid
 		left: 0
 		background-color: #414e5b
 		opacity: .6
+		+mt(.25s)
 	.table
 		z-index: 2
 		position: relative
@@ -53,6 +56,10 @@ body textarea:required:valid
 		span
 		font-size: em(26px)
 		color: #fff
+		font-family: "OpenSansLight", sans-serif
+		i
+			color: #b5bdc6
+			font-size: 58px
 
 
 .tizer-triangle
@@ -67,6 +74,79 @@ body textarea:required:valid
 		top: -60px
 		right: 6px
 
+.s-profile
+	.fa-plus
+		color: #b1b8be
+	.button
+		margin-top: 45px
+		width: 100%
+	h2
+		margin-top: 0
+		line-height: em(19px)
+	p
+		color: #777
+
+.home-gallery-wrap
+	a
+		display: none
+		&:first-child
+			display: block
+
+// Magnific-Popup Customize
+.mfp-ready .mfp-figure
+	opacity: 0
+.mfp-zoom-in
+	.mfp-figure, .mfp-iframe-holder .mfp-iframe-scaler
+		opacity: 0
+		transition: all 0.3s ease-out
+		transform: scale(0.95)
+	&.mfp-bg, .mfp-preloader
+		opacity: 0
+		transition: all 0.3s ease-out
+	&.mfp-image-loaded .mfp-figure
+		opacity: 1
+		transform: scale(1)
+	&.mfp-ready
+		.mfp-iframe-holder .mfp-iframe-scaler
+			opacity: 1
+			transform: scale(1)
+		&.mfp-bg, .mfp-preloader
+			opacity: 0.8
+	&.mfp-removing
+		.mfp-figure, .mfp-iframe-holder .mfp-iframe-scaler
+			transform: scale(0.95)
+			opacity: 0
+		&.mfp-bg, .mfp-preloader
+			opacity: 0
+
+.mfp-iframe-scaler
+	overflow: visible
+.mfp-zoom-out-cur
+	cursor: auto
+	.mfp-image-holder .mfp-close
+		cursor: pointer
+.mfp-preloader
+	width: 30px
+	height: 30px
+	background-color: #FFF
+	opacity: 0.65
+	margin: 0 auto
+	animation: rotateplane 1.2s infinite ease-in-out
+@-webkit-keyframes rotateplane
+	0%
+		-webkit-transform: perspective(120px)
+	50%
+		-webkit-transform: perspective(120px) rotateY(180deg)
+	100%
+		-webkit-transform: perspective(120px) rotateY(180deg) rotateX(180deg)
+@keyframes rotateplane
+	0%
+		transform: perspective(120px) rotateX(0deg) rotateY(0deg)
+	50%
+		transform: perspective(120px) rotateX(-180.1deg) rotateY(0deg)
+	100%
+		transform: perspective(120px) rotateX(-180deg) rotateY(-179.9deg)
+
 
 //ALWAYS END
 @import media
@@ -74,3 +154,4 @@ body textarea:required:valid
 //Load Libs SASS
 @import app/libs/animate/animate.sass
 @import app/libs/font-awesome/css/font-awesome.sass
+@import app/libs/Magnific-Popup/magnific-popup.sass

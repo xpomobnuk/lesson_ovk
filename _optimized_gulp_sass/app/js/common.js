@@ -1,5 +1,25 @@
 $(function() {
 
+	$(".mfp-gallery").magnificPopup({
+		type: 'image',
+		closeOnContentClick: true,
+		image: {
+			verticalFit: false
+		},
+		gallery: {
+			enabled: true
+		}
+	});
+
+
+
+	$(".mouse-icon").click(function() {
+		$("html, body").animate({
+			scrollTop : $(".s-adv").offset().top
+		}, 800);
+	});
+
+
 	$(".toggle-mnu").click(function() {
 	  $(this).toggleClass("on");
 	  $(".main-mnu").slideToggle();
