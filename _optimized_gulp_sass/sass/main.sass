@@ -81,13 +81,12 @@ body textarea:required:valid
 		margin-top: 45px
 		width: 100%
 	h2
-		margin-top: 0
-		line-height: em(19px)
+		text-align: left
 	p
 		color: #777
 
-.home-gallery-wrap
-	a
+.home-gallery-wrap > a,
+.certificate-wrap > a
 		display: none
 		&:first-child
 			display: block
@@ -126,10 +125,10 @@ body textarea:required:valid
 	.mfp-image-holder .mfp-close
 		cursor: pointer
 .mfp-preloader
-	width: 30px
-	height: 30px
-	background-color: #FFF
-	opacity: 0.65
+	width: 30px !important
+	height: 30px !important
+	background-color: $accent
+	opacity: 1
 	margin: 0 auto
 	animation: rotateplane 1.2s infinite ease-in-out
 @-webkit-keyframes rotateplane
@@ -146,6 +145,10 @@ body textarea:required:valid
 		transform: perspective(120px) rotateX(-180.1deg) rotateY(0deg)
 	100%
 		transform: perspective(120px) rotateX(-180deg) rotateY(-179.9deg)
+
+.item-vertical
+	margin-top: 80px
+	text-align: center
 
 
 //ALWAYS END
