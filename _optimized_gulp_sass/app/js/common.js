@@ -1,6 +1,6 @@
 $(function() {
 
-
+	$(".s-direct .item-vertical p").equalHeights();
 
 
 	$(".mfp-gallery").each(function(){
