@@ -200,7 +200,7 @@ body textarea:required:valid
 
 .portfolio
 	margin-top: 30px
-	.col-lg-4
+	.col-md-4
 		padding: 0
 	.portfolio-item
 		position: relative
@@ -230,6 +230,62 @@ body textarea:required:valid
 			i
 				color: rgba(65,78,91, .6)
 				font-size: 24px
+
+.portfolio-popup
+	position: relative
+	display: block
+	background-color: #fff
+	max-width: 1000px
+	margin: 5% auto
+	text-align: center
+	padding-top: 15px 
+	+mt(.25s)
+	.responsive-img
+	.row, .col-sm-12
+		display: block
+	h2
+		line-height: em(21px)
+		margin: 30px 0
+		width: 70%
+		margin: 30px auto
+	&-text
+		text-align: left
+	.td
+		vertical-align: top
+		padding: 0 7px
+		color: #666
+		&.wsnw
+			color: $accent
+		i
+			font-size: 22px
+			margin-right: 3px
+
+.portfolio-popup-text
+	display: block
+	width: 90%
+	margin: 20px auto 40px
+
+.wsnw
+	white-space: nowrap
+
+//.my-mfp-zoom-in Animation
+.my-mfp-zoom-in
+	.portfolio-popup
+		opacity: 0
+		transform: scale(0.8)
+	&.mfp-ready .portfolio-popup
+		opacity: 1
+		transform: scale(1)
+	&.mfp-removing .portfolio-popup
+		transform: scale(0.8)
+		opacity: 0
+	&.mfp-bg
+		opacity: 0
+		transition: opacity 0.3s ease-out
+	&.mfp-ready.mfp-bg
+		opacity: 0.8
+	&.mfp-removing.mfp-bg
+		opacity: 0
 
 //ALWAYS END
 @import media

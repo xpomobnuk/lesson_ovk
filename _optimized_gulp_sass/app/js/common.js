@@ -2,6 +2,20 @@ $(function() {
 
 	$(".s-direct .item-vertical p").equalHeights();
 
+	$(".portfolio-item").each(function (e){
+
+		var th = $(this);
+
+		th.attr("href", "#portfolio-img-" + e)
+			.find(".portfolio-popup")
+				.attr("id", "portfolio-img-" + e);
+	});
+
+	$(".portfolio-item").magnificPopup({
+		mainClass: 'my-mfp-zoom-in',
+		removalDelay: 300,
+		type: 'inline',
+	});
 
 	$(".mfp-gallery").each(function(){
 		$(this).magnificPopup({
