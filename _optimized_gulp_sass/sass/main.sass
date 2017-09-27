@@ -414,11 +414,33 @@ body textarea:required:valid
 
 .carousel-brands
 	padding: 0 80px
+	position: relative
+	.owl-controls
+		left: 0
+		top: 0
+		width: 100%
+		position: absolute
+		.owl-nav
+			width: 100%
+			top: 0
+			position: absolute
+			> div
+				position: absolute
+				left: 25px
+				font-size: 34px
+				line-height: 36px
+				color: #9c9c9c
+				+mt(.5s)
+				&:hover
+					color: $accent
+				&.owl-next
+					right: 25px
+					left: auto
 	.carousel-brand
 		+mt(.5s)
-		opacity: .4
+		opacity: .5
 		&:hover
-			opacity: .8
+			opacity: .9
 		a
 			display: block
 			text-align: center
@@ -426,6 +448,45 @@ body textarea:required:valid
 				max-width: 70%
 				max-height: 40px
 				display: inline-block
+
+.s-testomonials
+	h2
+		margin-bottom: 60px
+.testimonials-item
+	text-align: center
+	font-size: em(14px)
+	margin-top: 20px
+	.rounded-img-wrap
+		width: 98px
+		height: 98px
+		border-color: #fff
+		box-shadow: rgba(0,0,0,.15) 0 0 5px
+	> h4
+		font-size: em(16px)
+		font-family: "OpenSansBold", sans-serif
+		margin-top: 35px
+		margin-bottom: 12px
+		+ p
+			font-size: em(15px)
+			letter-spacing: 2px
+			margin-top: 0
+			color: #666
+	.testimonials-desc
+		background-color: $blue
+		color: #fff
+		padding: 30px
+		margin-top: 55px
+		border-radius: 2px
+		&::before
+			content: ''
+			@include triangle(24px, gray, up)
+		h4
+			font-size: em(19px)
+			text-transform: none
+			margin-top: 0
+			margin-bottom: 18px
+		p
+			color: #b5babf
 
 //ALWAYS END
 @import media
