@@ -1,7 +1,7 @@
 $(function() {
 
-	 
-	 $(".carousel-brands").owlCarousel({
+
+	$(".carousel-brands").owlCarousel({
 		loop:true,
 		margin: 30,
 		nav: true,
@@ -53,16 +53,28 @@ $(function() {
 		}
 	});
 
-	$(".s-direct .item-vertical p").equalHeights();
-	$(".carousel-text").equalHeights();
+	function heightses() {
+		$(".s-direct .item-vertical p").height('auto').equalHeights();
+		$(".carousel-text").height('auto').equalHeights();
+		$(".testimonials-head").height('auto').equalHeights();
+		$(".testimonials-desc").height('auto').equalHeights();
+	}
+
+	heightses();
+
+	$(window).resize(function()	{
+		heightses();
+	});
+	
+	
 
 	$(".portfolio-item").each(function (e){
 
 		var th = $(this);
 
 		th.attr("href", "#portfolio-img-" + e)
-			.find(".portfolio-popup")
-				.attr("id", "portfolio-img-" + e);
+		.find(".portfolio-popup")
+		.attr("id", "portfolio-img-" + e);
 	});
 
 	$(".portfolio-item").magnificPopup({
