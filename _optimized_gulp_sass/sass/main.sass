@@ -1,28 +1,35 @@
 @import bourbon
 @import vars.sass
 
+//Load Libs SASS
+@import "app/libs/animate/animate.sass"
+@import "app/libs/font-awesome/css/font-awesome.sass"
+@import "app/libs/Magnific-Popup/magnific-popup.sass"
+@import "app/libs/owl-carousel/assets/owl.carousel.sass"
+@import "app/libs/selectize/dist/css/selectize.default"
+
 *::-webkit-input-placeholder
-	color: #666
+	color: #222
 	opacity: 1
 
 *:-moz-placeholder
-	color: #666
+	color: #222
 	opacity: 1
 
 *::-moz-placeholder
-	color: #666
+	color: #222
 	opacity: 1
 
 *:-ms-input-placeholder
-	color: #666
+	color: #222
 	opacity: 1
 
 body input:focus:required:invalid,
 body textarea:focus:required:invalid
-	color: #666
+	color: #222
 body input:required:valid,
 body textarea:required:valid
-	color: #666
+	color: #222
 
 //Custom Styles Here
 .s-gray
@@ -503,12 +510,64 @@ body textarea:required:valid
 			margin-bottom: 16px
 		p
 			color: #b5babf
+			margin-bottom: 0
+
+.s-contacts-wrapper
+	margin-top: 40px
+	.map
+		margin-top: 30px
+		margin-bottom: 20px
+
+.contacts-text
+	font-size: em(18px)
+	font-family: "OpenSansLight", sans-serif
+	p
+		margin-top: 0
+		margin-bottom: 5px
+	.fa
+		color: $accent
+		margin-right: 5px
+		font-size: 24px
+		width: 15px
+		text-align: center
+
+
+form
+	label
+		margin-bottom: 12px
+		display: block
+		span
+			font-size: 14px
+			color: #fff
+			opacity: .3
+			display: block
+			margin-bottom: 3px
+		input, select, .selectize-input, .selectize-control.single .selectize-input
+			box-shadow: none
+			background-color: rgba(255,255,255,.6)
+			background-image: none
+			border-radius: 2px
+			border: none
+			padding: 9px 15px 7px
+			display: block
+			width: 100%
+			color: #222
+			font-size: em(15px)
+			border-bottom: $blue 4px solid
+			+mt(.5s)
+		.selectize-control.single .selectize-input
+			padding: 11px 15px
+			&:focus
+				border-bottom: lighten($blue, 10%) 4px solid
+
+.selectize-control				
+	.selectize-dropdown 
+		top: 41px!important
+		border: none
+select
+	option
+		background-color: lighten($blue, 45%)
+
 
 //ALWAYS END
 @import media
-
-//Load Libs SASS
-@import app/libs/animate/animate.sass
-@import app/libs/font-awesome/css/font-awesome.sass
-@import app/libs/Magnific-Popup/magnific-popup.sass
-@import app/libs/owl-carousel/assets/owl.carousel.sass

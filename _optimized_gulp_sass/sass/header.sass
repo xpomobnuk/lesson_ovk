@@ -44,6 +44,10 @@ a
 .hidden
 	display: none
 
+b, strong
+	font-family: "OpenSansSemiBold", sans-serif
+	font-weight: normal
+
 .main-head
 	background-image: url(img/bg_top.jpg)
 	background-size: cover
@@ -347,3 +351,48 @@ ul.home-list
 .td
 	display: table-cell
 	vertical-align: middle
+
+.contact-form
+	padding: 32px
+	background-color: darken($blue, 5%)
+	.button
+		margin-top: 25px
+	&-head
+		text-align: center
+		h4
+			font-size: em(18px)
+			margin:
+				top: 0
+				bottom: 10px
+		p
+			color: #fff
+			opacity: .6
+			font-size: em(14px)
+
+form
+	label
+		margin-bottom: 12px
+		display: block
+		span
+			font-size: 14px
+			color: #fff
+			opacity: .3
+			display: block
+			margin-bottom: 3px
+		input, select
+			background-color: rgba(255,255,255,.6)
+			border-radius: 2px
+			border: none
+			padding: 9px 15px 7px
+			display: block
+			width: 100%
+			color: #222
+			font-size: em(15px)
+			border-bottom: $blue 4px solid
+			+mt(.5s)
+			&:focus
+				border-bottom: lighten($blue, 10%) 4px solid
+
+select
+	option
+		background-color: lighten($blue, 45%)

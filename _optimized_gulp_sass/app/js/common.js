@@ -1,5 +1,6 @@
 $(function() {
 
+	$("form select").selectize();
 
 	$(".carousel-brands").owlCarousel({
 		loop:true,
@@ -57,15 +58,17 @@ $(function() {
 		$(".s-direct .item-vertical p").height('auto').equalHeights();
 		$(".carousel-text").height('auto').equalHeights();
 		$(".testimonials-head").height('auto').equalHeights();
+		$(".testimonials-desc p").height('auto').equalHeights();
 		$(".testimonials-desc").height('auto').equalHeights();
 	}
 
-	heightses();
+heightses();
 
 	$(window).resize(function()	{
 		heightses();
 	});
-	
+
+
 	
 
 	$(".portfolio-item").each(function (e){
