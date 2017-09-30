@@ -1,54 +1,55 @@
-global.hostname = "localhost";
+var gulp         = require('gulp'),
+		sass         = require('gulp-sass'),
+		autoprefixer = require('gulp-autoprefixer'),
+		cleanCSS     = require('gulp-clean-css'),
+		rename       = require('gulp-rename'),
+		browserSync  = require('browser-sync').create(),
+		concat       = require('gulp-concat'),
+		uglify       = require('gulp-uglify');
 
-var gulp = require('gulp'),
-sass = require('gulp-sass'),
-autoprefixer = require('gulp-autoprefixer'),
-minifycss = require('gulp-minify-css'),
-rename = require('gulp-rename');
-
-gulp.task('express', function() {
-	var express = require('express');
-	var app = express();
-	app.use(require('connect-livereload')({port: 35729}));
-	app.use(express.static(__dirname + '/app'));
-	app.listen('80', hostname);
+gulp.task('browser-sync', ['styles', 'scripts'], function() {
+		browserSync.init({
+				server: {
+						baseDir: "./app"
+				},
+				notify: false
+		});
 });
-
-var tinylr;
-gulp.task('livereload', function() {
-	tinylr = require('tiny-lr')();
-	tinylr.listen(35729);
-});
-
-function notifyLiveReload(event) {
-	var fileName = require('path').relative(__dirname, event.path);
-	tinylr.changed({
-		body: {
-			files: [fileName]
-		}
-	});
-}
 
 gulp.task('styles', function () {
-	gulp.src('sass/*.sass')
+	return gulp.src('sass/*.sass')
 	.pipe(sass({
 		includePaths: require('node-bourbon').includePaths
 	}).on('error', sass.logError))
-	.pipe(rename({suffix: '.min', prefix : '_'}))
-	.pipe(autoprefixer({
-		browsers: ['last 15 versions'],
-		cascade: false
-	}))
-	.pipe(minifycss())
-	.pipe(gulp.dest('app'));
+	.pipe(rename({suffix: '.min', prefix : ''}))
+	.pipe(autoprefixer({browsers: ['last 15 versions'], cascade: false}))
+	.pipe(cleanCSS())
+	.pipe(gulp.dest('app/css'))
+	.pipe(browserSync.stream());
 });
 
-gulp.task('watch', function() {
+gulp.task('scripts', function() {
+	return gulp.src([
+		'./app/libs/modernizr/modernizr.js',
+		'./app/libs/jquery/jquery-1.11.2.min.js',
+		'./app/libs/waypoints/waypoints.min.js',
+		'./app/libs/animate/animate-css.js',
+		'./app/libs/Magnific-Popup/jquery.magnific-popup.min.js',
+		'./app/libs/animateNumber/jquery.animateNumber.min.js',
+		'./app/libs/equalHeights/equalHeights.min.js',
+		'./app/libs/owl-carousel/owl.carousel.min.js',
+		'./app/libs/selectize/dist/js/standalone/selectize.min.js',
+		])
+		.pipe(concat('libs.js'))
+		.pipe(uglify()) //Minify libs.js
+		.pipe(gulp.dest('./app/js/'));
+});
+
+gulp.task('watch', function () {
 	gulp.watch('sass/*.sass', ['styles']);
-	gulp.watch('app/*.css', notifyLiveReload);
-	gulp.watch('app/*.html', notifyLiveReload);
+	gulp.watch('app/libs/**/*.js', ['scripts']);
+	gulp.watch('app/js/*.js').on("change", browserSync.reload);
+	gulp.watch('app/*.html').on('change', browserSync.reload);
 });
 
-gulp.task('default', ['styles', 'express', 'livereload', 'watch'], function() {
-
-});
+gulp.task('default', ['browser-sync', 'watch']);
