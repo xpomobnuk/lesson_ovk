@@ -161,6 +161,10 @@ heightses();
 		return false;
 	});
 
+	$(".main-foot .toggle-mnu").click(function()	{
+		$("html, body").animate({scrollTop: $(document).height() + 200}, "slow");
+		return false;
+	});
 
 	//SVG Fallback
 	if(!Modernizr.svg) {

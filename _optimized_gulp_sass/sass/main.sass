@@ -534,7 +534,7 @@ body textarea:required:valid
 
 form
 	label
-		margin-bottom: 12px
+		margin-bottom: 14px
 		display: block
 		span
 			font-size: 14px
@@ -542,36 +542,73 @@ form
 			opacity: .3
 			display: block
 			margin-bottom: 3px
-		input, select, .selectize-input, .selectize-control.single .selectize-input
-			box-shadow: none
+		input, select, .selectize-input, .selectize-input.full
 			background-color: rgba(255,255,255,.6)
-			background-image: none
 			border-radius: 2px
 			border: none
 			padding: 9px 15px 7px
+			background-image: none!important
 			display: block
 			width: 100%
 			color: #222
 			font-size: em(15px)
-			border-bottom: $blue 4px solid
-			+mt(.5s)
-		.selectize-control.single .selectize-input
-			padding: 11px 15px
+			border-bottom: transparent 4px solid
+			transition: all .5s ease
 			&:focus
-				border-bottom: lighten($blue, 10%) 4px solid
+				background-color: #fff!important
+				border-bottom: lighten($blue, 9%) 4px solid
+		.selectize-input, .selectize-input.full
+			background-color: rgba(255,255,255,.6)
+			&:active, 
+				background-color: #fff!important
+			padding: 11px 15px				
+		.selectize-dropdown
+			border: none
+			.option
+				padding: 8px 15px
+			.active
+				background-color: $blue
+				color: #fff
 
-.selectize-control				
-	.selectize-dropdown 
-		top: 41px!important
+.contact-form
+	.selectize-control
+		.selectize-input
+			background-color: rgba(255,255,255,.6)
+			box-shadow: none
+
+.selectize-control.single .selectize-input
+	&::after
+		position: absolute
+		top: 50%
+		right: 26px
+		margin-top: -7px
+		content: '\f107'
 		border: none
-select
-	option
-		background-color: lighten($blue, 45%)
+		font-family: "fontAwesome"
+		font-size: 20px
+	&.dropdown-active::after
+		margin-top: -7px
 
 
 .main-foot
-	background-color: orange
-	color: blue asdasd
+	background-color: darken($blue, 10%)
+	.mnu-line
+		padding: 40px 0
+		.img-svg
+			width: 100px
+			max-height: 46px
+			path
+				fill: #acb6be!important
+	.main-mnu
+		> ul
+			> li
+				&.active, &:hover, &:focus
+					a
+						color: #d7dde2
+	.phone
+		.phone-wrap
+			color: #acb6be
+
 
 //ALWAYS END
 @import media

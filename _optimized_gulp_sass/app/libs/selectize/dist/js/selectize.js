@@ -1,5 +1,5 @@
 /**
- * selectize.js (v0.12.4)
+ * selectize.js (v0.12.1)
  * Copyright (c) 2013–2015 Brian Reavis & contributors
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -59,20 +59,6 @@
 			highlight(this);
 		});
 	};
-	
-	/**
-	 * removeHighlight fn copied from highlight v5 and
-	 * edited to remove with() and pass js strict mode
-	 */
-	$.fn.removeHighlight = function() {
-		return this.find("span.highlight").each(function() {
-			this.parentNode.firstChild.nodeName;
-			var parent = this.parentNode;
-			parent.replaceChild(this.firstChild, this);
-			parent.normalize();
-		}).end();
-	};
-	
 	
 	var MicroEvent = function() {};
 	MicroEvent.prototype = {
@@ -136,8 +122,7 @@
 	var TAG_INPUT     = 2;
 	
 	// for now, android support in general is too spotty to support validity
-	var SUPPORTS_VALIDITY_API = !/android/i.test(window.navigator.userAgent) && !!document.createElement('input').validity;
-	
+	var SUPPORTS_VALIDITY_API = !/android/i.test(window.navigator.userAgent) && !!document.createElement('form').validity;
 	
 	var isset = function(object) {
 		return typeof object !== 'undefined';
@@ -459,29 +444,6 @@
 		update();
 	};
 	
-	var domToString = function(d) {
-		var tmp = document.createElement('div');
-	
-		tmp.appendChild(d.cloneNode(true));
-	
-		return tmp.innerHTML;
-	};
-	
-	var logError = function(message, options){
-		if(!options) options = {};
-		var component = "Selectize";
-	
-		console.error(component + ": " + message)
-	
-		if(options.explanation){
-			// console.group is undefined in <IE11
-			if(console.group) console.group();
-			console.error(options.explanation);
-			if(console.group) console.groupEnd();
-		}
-	}
-	
-	
 	var Selectize = function($input, settings) {
 		var key, i, n, dir, input, self = this;
 		input = $input[0];
@@ -570,18 +532,7 @@
 	// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 	
 	MicroEvent.mixin(Selectize);
-	
-	if(typeof MicroPlugin !== "undefined"){
-		MicroPlugin.mixin(Selectize);
-	}else{
-		logError("Dependency MicroPlugin is missing",
-			{explanation:
-				"Make sure you either: (1) are using the \"standalone\" "+
-				"version of Selectize, or (2) require MicroPlugin before you "+
-				"load Selectize."}
-		);
-	}
-	
+	MicroPlugin.mixin(Selectize);
 	
 	// methods
 	// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -610,7 +561,6 @@
 			var timeout_focus;
 			var classes;
 			var classes_plugins;
-			var inputId;
 	
 			inputMode         = self.settings.mode;
 			classes           = $input.attr('class') || '';
@@ -621,11 +571,6 @@
 			$dropdown_parent  = $(settings.dropdownParent || $wrapper);
 			$dropdown         = $('<div>').addClass(settings.dropdownClass).addClass(inputMode).hide().appendTo($dropdown_parent);
 			$dropdown_content = $('<div>').addClass(settings.dropdownContentClass).appendTo($dropdown);
-	
-			if(inputId = $input.attr('id')) {
-				$control_input.attr('id', inputId + '-selectized');
-				$("label[for='"+inputId+"']").attr('for', inputId + '-selectized');
-			}
 	
 			if(self.settings.copyClassesToDropdown) {
 				$dropdown.addClass(classes);
@@ -902,26 +847,19 @@
 		 */
 		onPaste: function(e) {
 			var self = this;
-	
 			if (self.isFull() || self.isInputHidden || self.isLocked) {
 				e.preventDefault();
-				return;
-			}
-	
-			// If a regex or string is included, this will split the pasted
-			// input and create Items for each separate value
-			if (self.settings.splitOn) {
-	
-				// Wait for pasted text to be recognized in value
-				setTimeout(function() {
-					var pastedText = self.$control_input.val();
-					if(!pastedText.match(self.settings.splitOn)){ return }
-	
-					var splitInput = $.trim(pastedText).split(self.settings.splitOn);
-					for (var i = 0, n = splitInput.length; i < n; i++) {
-						self.createItem(splitInput[i]);
-					}
-				}, 0);
+			} else {
+				// If a regex or string is included, this will split the pasted
+				// input and create Items for each separate value
+				if (self.settings.splitOn) {
+					setTimeout(function() {
+						var splitInput = $.trim(self.$control_input.val() || '').split(self.settings.splitOn);
+						for (var i = 0, n = splitInput.length; i < n; i++) {
+							self.createItem(splitInput[i]);
+						}
+					}, 0);
+				}
 			}
 		},
 	
@@ -1055,7 +993,7 @@
 		 * Invokes the user-provide option provider / loader.
 		 *
 		 * Note: this function is debounced in the Selectize
-		 * constructor (by `settings.loadThrottle` milliseconds)
+		 * constructor (by `settings.loadDelay` milliseconds)
 		 *
 		 * @param {string} value
 		 */
@@ -1130,7 +1068,7 @@
 				self.refreshState();
 	
 				// IE11 bug: element still marked as active
-				dest && dest.focus && dest.focus();
+				(dest || document.body).focus();
 	
 				self.ignoreFocus = false;
 				self.trigger('blur');
@@ -1568,10 +1506,10 @@
 						optgroup = '';
 					}
 					if (!groups.hasOwnProperty(optgroup)) {
-						groups[optgroup] = document.createDocumentFragment();
+						groups[optgroup] = [];
 						groups_order.push(optgroup);
 					}
-					groups[optgroup].appendChild(option_html);
+					groups[optgroup].push(option_html);
 				}
 			}
 	
@@ -1585,30 +1523,26 @@
 			}
 	
 			// render optgroup headers & join groups
-			html = document.createDocumentFragment();
+			html = [];
 			for (i = 0, n = groups_order.length; i < n; i++) {
 				optgroup = groups_order[i];
-				if (self.optgroups.hasOwnProperty(optgroup) && groups[optgroup].childNodes.length) {
+				if (self.optgroups.hasOwnProperty(optgroup) && groups[optgroup].length) {
 					// render the optgroup header and options within it,
 					// then pass it to the wrapper template
-					html_children = document.createDocumentFragment();
-					html_children.appendChild(self.render('optgroup_header', self.optgroups[optgroup]));
-					html_children.appendChild(groups[optgroup]);
-	
-					html.appendChild(self.render('optgroup', $.extend({}, self.optgroups[optgroup], {
-						html: domToString(html_children),
-						dom:  html_children
+					html_children = self.render('optgroup_header', self.optgroups[optgroup]) || '';
+					html_children += groups[optgroup].join('');
+					html.push(self.render('optgroup', $.extend({}, self.optgroups[optgroup], {
+						html: html_children
 					})));
 				} else {
-					html.appendChild(groups[optgroup]);
+					html.push(groups[optgroup].join(''));
 				}
 			}
 	
-			$dropdown_content.html(html);
+			$dropdown_content.html(html.join(''));
 	
 			// highlight matching terms inline
 			if (self.settings.highlight && results.query.length && results.tokens.length) {
-				$dropdown_content.removeHighlight();
 				for (i = 0, n = results.tokens.length; i < n; i++) {
 					highlight($dropdown_content, results.tokens[i].regex);
 				}
@@ -1693,7 +1627,7 @@
 		 */
 		registerOption: function(data) {
 			var key = hash_key(data[this.settings.valueField]);
-			if (typeof key === 'undefined' || key === null || this.options.hasOwnProperty(key)) return false;
+			if (!key || this.options.hasOwnProperty(key)) return false;
 			data.$order = data.$order || ++this.order;
 			this.options[key] = data;
 			return key;
@@ -1996,7 +1930,7 @@
 			var self = this;
 			var $item, i, idx;
 	
-			$item = (value instanceof $) ? value : self.getItem(value);
+			$item = (typeof value === 'object') ? value : self.getItem(value);
 			value = hash_key($item.attr('data-value'));
 			i = self.items.indexOf(value);
 	
@@ -2106,26 +2040,12 @@
 		 * and CSS classes.
 		 */
 		refreshState: function() {
-			this.refreshValidityState();
-			this.refreshClasses();
-		},
-	
-		/**
-		 * Update the `required` attribute of both input and control input.
-		 *
-		 * The `required` property needs to be activated on the control input
-		 * for the error to be displayed at the right place. `required` also
-		 * needs to be temporarily deactivated on the input since the input is
-		 * hidden and can't show errors.
-		 */
-		refreshValidityState: function() {
-			if (!this.isRequired) return false;
-	
-			var invalid = !this.items.length;
-	
-			this.isInvalid = invalid;
-			this.$control_input.prop('required', invalid);
-			this.$input.prop('required', !invalid);
+			var invalid, self = this;
+			if (self.isRequired) {
+				if (self.items.length) self.isInvalid = false;
+				self.$control_input.prop('required', invalid);
+			}
+			self.refreshClasses();
 		},
 	
 		/**
@@ -2236,7 +2156,6 @@
 	
 			if (self.settings.mode === 'single' && self.items.length) {
 				self.hideInput();
-				self.$control_input.blur(); // close keyboard on iOS
 			}
 	
 			self.isOpen = false;
@@ -2571,26 +2490,26 @@
 			}
 	
 			// render markup
-			html = $(self.settings.render[templateName].apply(this, [data, escape_html]));
+			html = self.settings.render[templateName].apply(this, [data, escape_html]);
 	
 			// add mandatory attributes
 			if (templateName === 'option' || templateName === 'option_create') {
-				html.attr('data-selectable', '');
+				html = html.replace(regex_tag, '<$1 data-selectable');
 			}
-			else if (templateName === 'optgroup') {
+			if (templateName === 'optgroup') {
 				id = data[self.settings.optgroupValueField] || '';
-				html.attr('data-group', id);
+				html = html.replace(regex_tag, '<$1 data-group="' + escape_replace(escape_html(id)) + '"');
 			}
 			if (templateName === 'option' || templateName === 'item') {
-				html.attr('data-value', value || '');
+				html = html.replace(regex_tag, '<$1 data-value="' + escape_replace(escape_html(value || '')) + '"');
 			}
 	
 			// update cache
 			if (cache) {
-				self.renderCache[templateName][value] = html[0];
+				self.renderCache[templateName][value] = html;
 			}
 	
-			return html[0];
+			return html;
 		},
 	
 		/**
@@ -2773,7 +2692,7 @@
 			var addOption = function($option, group) {
 				$option = $($option);
 	
-				var value = hash_key($option.val());
+				var value = hash_key($option.attr('value'));
 				if (!value && !settings.allowEmptyOption) return;
 	
 				// if the option already exists, it's probably been
@@ -3052,113 +2971,59 @@
 	});
 	
 	Selectize.define('remove_button', function(options) {
+		if (this.settings.mode === 'single') return;
+	
 		options = $.extend({
-				label     : '&times;',
-				title     : 'Remove',
-				className : 'remove',
-				append    : true
-			}, options);
+			label     : '&times;',
+			title     : 'Remove',
+			className : 'remove',
+			append    : true
+		}, options);
 	
-			var singleClose = function(thisRef, options) {
+		var self = this;
+		var html = '<a href="javascript:void(0)" class="' + options.className + '" tabindex="-1" title="' + escape_html(options.title) + '">' + options.label + '</a>';
 	
-				options.className = 'remove-single';
+		/**
+		 * Appends an element as a child (with raw HTML).
+		 *
+		 * @param {string} html_container
+		 * @param {string} html_element
+		 * @return {string}
+		 */
+		var append = function(html_container, html_element) {
+			var pos = html_container.search(/(<\/[^>]+>\s*)$/);
+			return html_container.substring(0, pos) + html_element + html_container.substring(pos);
+		};
 	
-				var self = thisRef;
-				var html = '<a href="javascript:void(0)" class="' + options.className + '" tabindex="-1" title="' + escape_html(options.title) + '">' + options.label + '</a>';
-	
-				/**
-				 * Appends an element as a child (with raw HTML).
-				 *
-				 * @param {string} html_container
-				 * @param {string} html_element
-				 * @return {string}
-				 */
-				var append = function(html_container, html_element) {
-					return html_container + html_element;
-				};
-	
-				thisRef.setup = (function() {
-					var original = self.setup;
-					return function() {
-						// override the item rendering method to add the button to each
-						if (options.append) {
-							var id = $(self.$input.context).attr('id');
-							var selectizer = $('#'+id);
-	
-							var render_item = self.settings.render.item;
-							self.settings.render.item = function(data) {
-								return append(render_item.apply(thisRef, arguments), html);
-							};
-						}
-	
-						original.apply(thisRef, arguments);
-	
-						// add event listener
-						thisRef.$control.on('click', '.' + options.className, function(e) {
-							e.preventDefault();
-							if (self.isLocked) return;
-	
-							self.clear();
-						});
-	
+		this.setup = (function() {
+			var original = self.setup;
+			return function() {
+				// override the item rendering method to add the button to each
+				if (options.append) {
+					var render_item = self.settings.render.item;
+					self.settings.render.item = function(data) {
+						return append(render_item.apply(this, arguments), html);
 					};
-				})();
+				}
+	
+				original.apply(this, arguments);
+	
+				// add event listener
+				this.$control.on('click', '.' + options.className, function(e) {
+					e.preventDefault();
+					if (self.isLocked) return;
+	
+					var $item = $(e.currentTarget).parent();
+					self.setActiveItem($item);
+					if (self.deleteSelection()) {
+						self.setCaret(self.items.length);
+					}
+				});
+	
 			};
+		})();
 	
-			var multiClose = function(thisRef, options) {
-	
-				var self = thisRef;
-				var html = '<a href="javascript:void(0)" class="' + options.className + '" tabindex="-1" title="' + escape_html(options.title) + '">' + options.label + '</a>';
-	
-				/**
-				 * Appends an element as a child (with raw HTML).
-				 *
-				 * @param {string} html_container
-				 * @param {string} html_element
-				 * @return {string}
-				 */
-				var append = function(html_container, html_element) {
-					var pos = html_container.search(/(<\/[^>]+>\s*)$/);
-					return html_container.substring(0, pos) + html_element + html_container.substring(pos);
-				};
-	
-				thisRef.setup = (function() {
-					var original = self.setup;
-					return function() {
-						// override the item rendering method to add the button to each
-						if (options.append) {
-							var render_item = self.settings.render.item;
-							self.settings.render.item = function(data) {
-								return append(render_item.apply(thisRef, arguments), html);
-							};
-						}
-	
-						original.apply(thisRef, arguments);
-	
-						// add event listener
-						thisRef.$control.on('click', '.' + options.className, function(e) {
-							e.preventDefault();
-							if (self.isLocked) return;
-	
-							var $item = $(e.currentTarget).parent();
-							self.setActiveItem($item);
-							if (self.deleteSelection()) {
-								self.setCaret(self.items.length);
-							}
-						});
-	
-					};
-				})();
-			};
-	
-			if (this.settings.mode === 'single') {
-				singleClose(this, options);
-				return;
-			} else {
-				multiClose(this, options);
-			}
 	});
-	
 	
 	Selectize.define('restore_on_backspace', function(options) {
 		var self = this;
