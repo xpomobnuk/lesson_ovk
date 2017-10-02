@@ -157,7 +157,7 @@ heightses();
 
 	$(".toggle-mnu").click(function() {
 		$(this).toggleClass("on");
-		$(".main-mnu").slideToggle();
+		$(this).parent().next().next().find(".main-mnu").slideToggle();
 		return false;
 	});
 
