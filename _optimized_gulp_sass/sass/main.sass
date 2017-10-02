@@ -277,15 +277,35 @@ body textarea:required:valid
 .wsnw
 	white-space: nowrap
 
+.form-callback
+	+mt(.3s)
+	max-width: 320px
+	margin: auto
+	box-shadow: rbga(0,0,0,.2) 0 0 20px
+	position: relative
+	overflow: hidden
+	.mfp-close
+		color: #fff
+		opacity: .3
+		+mt(.3s)
+		&:hover
+			opacity: .6
+	.contact-form-head
+		h4
+			color: #fff
+
 //.my-mfp-zoom-in Animation
 .my-mfp-zoom-in
-	.portfolio-popup
+	.portfolio-popup,
+	.form-callback
 		opacity: 0
 		transform: scale(0.8)
-	&.mfp-ready .portfolio-popup
+	&.mfp-ready .portfolio-popup,
+	&.mfp-ready .form-callback
 		opacity: 1
 		transform: scale(1)
-	&.mfp-removing .portfolio-popup
+	&.mfp-removing .portfolio-popup,
+	&.mfp-removing .form-callback
 		transform: scale(0.8)
 		opacity: 0
 	&.mfp-bg
@@ -609,6 +629,47 @@ form
 		.phone-wrap
 			color: #acb6be
 
+.success
+	color: #fff
+	display: flex
+	background-color: $blue
+	position: absolute
+	z-index: 1
+	left: 0
+	top: -100%
+	width: 100%
+	height: 100%
+	+mt(.5s)
+	opacity: 0
+	p
+		margin: auto
+		display: flex
+	&.active
+		top: 0
+		opacity: 1
+
+.top
+	position: fixed
+	bottom: 38px
+	right: -120px
+	width: 50px
+	height: 50px
+	border-radius: 10em
+	cursor: pointer
+	background-color: #fff
+	text-align: center
+	opacity: .4
+	color: $blue
+	z-index: 5
+	+mt(.5s)
+	.fa
+		font-size: 32px
+		margin-top: 8px
+	&:hover
+		opacity: 1
+		background-color: $accent
+	&.active
+		right: 10px
 
 //ALWAYS END
 @import media

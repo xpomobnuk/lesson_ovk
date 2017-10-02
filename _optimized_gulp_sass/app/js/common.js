@@ -80,10 +80,17 @@ heightses();
 		.attr("id", "portfolio-img-" + e);
 	});
 
-	$(".portfolio-item").magnificPopup({
+	$(".portfolio-item, a[href='#callback']").magnificPopup({
 		mainClass: 'my-mfp-zoom-in',
 		removalDelay: 300,
 		type: 'inline',
+	});
+
+	$("a[href='#callback']").click(function(){
+		var dateForm = $(this).data("form");
+		var dateText = $(this).data("text");
+		$(".form-callback h4").text(dateText);
+		$(".form-callback [name=admin-data]").val(dateForm);
 	});
 
 	$(".mfp-gallery").each(function(){
@@ -166,6 +173,10 @@ heightses();
 		return false;
 	});
 
+	$("body").on("click", ".top", function()	{
+		$("html, body").animate({scrollTop: 0}, "slow");
+	});
+
 	//SVG Fallback
 	if(!Modernizr.svg) {
 		$("img[src*='svg']").attr("src", function() {
@@ -182,14 +193,19 @@ heightses();
 			url: "mail.php", //Change
 			data: th.serialize()
 		}).done(function() {
-			alert("Thank you!");
+			$(".form-callback .success").addClass("active");
 			setTimeout(function() {
 				// Done Functions
+				$(".form-callback .success").removeClass("active");
 				th.trigger("reset");
-			}, 1000);
+				$.magnificPopuc.close();
+			}, 3000);
 		});
 		return false;
 	});
+
+
+	$("body").append('<div class="top"><i class="fa fa-angle-double-up">');
 
 	//Chrome Smooth Scroll
 	try {
@@ -237,6 +253,14 @@ heightses();
 
       }, 'xml');
 
+	});
+
+	$(window).scroll(function(){
+		if($(this).scrollTop() > $(this).height()){
+			$(".top").addClass("active");
+		} else {
+			$(".top").removeClass("active");
+		}
 	});
 
 });
